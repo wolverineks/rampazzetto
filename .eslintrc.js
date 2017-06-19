@@ -1,7 +1,12 @@
 module.exports = {
-    "extends": "standard",
-    "plugins": [
-        "standard",
-        "promise"
-    ]
-};
+  extends: 'standard',
+  plugins: ['standard', 'promise'],
+  rules: {
+    camelcase: 'error',
+    'no-throw-literal': 'error',
+    'no-var': 'error',
+    'prefer-const': 'error',
+    'promise/always-return': 'error',
+    'promise/no-return-wrap': 'error'
+  }
+}

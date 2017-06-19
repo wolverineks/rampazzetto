@@ -1,98 +1,125 @@
-'use strict'
-
-Object.defineProperty(exports, '__esModule', { value: true })
+'use strict';
 
 var RNumber = function RNumber (number) {
+  if (typeof number === 'object' && number !== null && number.type === 'RNumber') {
+    return number
+  }
   if (typeof number !== 'number') {
     throw new TypeError('Not a valid parameter')
   }
-  this.value = number
-}
+  this.value = number;
 
-var prototypeAccessors = { type: {} }
+  return Object.freeze(this)
+};
+
+var prototypeAccessors = { type: {} };
+
+RNumber.isRNumber = function isRNumber (candidate) {
+  var isRNumber = (
+    typeof candidate === 'object' &&
+    candidate !== null &&
+    candidate.type === 'RNumber'
+  );
+
+  return isRNumber
+};
 
 prototypeAccessors.type.get = function () {
   return 'RNumber'
-}
+};
 
 RNumber.prototype.add = function add (rnumber) {
   if (rnumber.type !== 'RNumber') { throw new TypeError('Not a valid parameter') }
-  var result = rnumber.value + this.value
+  var result = rnumber.value + this.value;
 
   return new RNumber(result)
-}
+};
 
 RNumber.prototype.subtract = function subtract (rnumber) {
   if (rnumber.type !== 'RNumber') { throw new TypeError('Not a valid parameter') }
-  var result = this.value - rnumber.value
+  var result = this.value - rnumber.value;
 
   return new RNumber(result)
-}
+};
 
 RNumber.prototype.sum = function sum (rnumber) {
   if (rnumber.type !== 'RNumber') { throw new TypeError('Not a valid parameter') }
-  var result = rnumber.value + this.value
+  var result = rnumber.value + this.value;
 
   return new RNumber(result)
-}
+};
 
 RNumber.prototype.diff = function diff (rnumber) {
   if (rnumber.type !== 'RNumber') { throw new TypeError('Not a valid parameter') }
-  var result = rnumber.value - this.value
+  var result = rnumber.value - this.value;
 
   return new RNumber(result)
-}
+};
 
 RNumber.prototype.multiply = function multiply (rnumber) {
   if (rnumber.type !== 'RNumber') { throw new TypeError('Not a valid parameter') }
-  var result = this.value * rnumber.value
+  var result = this.value * rnumber.value;
 
   return new RNumber(result)
-}
+};
 
 RNumber.prototype.divide = function divide (rnumber) {
   if (rnumber.type !== 'RNumber') { throw new TypeError('Not a valid parameter') }
-  var result = this.value / rnumber.value
+  var result = this.value / rnumber.value;
 
   return new RNumber(result)
-}
+};
 
-Object.defineProperties(RNumber.prototype, prototypeAccessors)
+Object.defineProperties( RNumber.prototype, prototypeAccessors );
 
 var RArray = function RArray () {
-  var elements = [], len = arguments.length
-  while (len--) elements[ len ] = arguments[ len ]
+  var elements = [], len = arguments.length;
+  while ( len-- ) elements[ len ] = arguments[ len ];
 
-  var isValid = elements.every(function (element) {
-    return (element.type === 'RNumber')
-  })
-  if (!isValid) {
-    throw new TypeError('Not valid parameter for RArray #constructor()')
-  }
-  this.value = elements
-}
+  var convertedElements = elements.map(function (element) {
+    return new RNumber(element)
+  });
+  this.value = convertedElements;
 
-var prototypeAccessors$1 = { type: {}, length: {} }
+  return Object.freeze(this)
+};
+
+var prototypeAccessors$1 = { type: {},length: {} };
+
+RArray.isRArray = function isRArray (candidate) {
+  var isRArray = (
+    typeof candidate === 'object' &&
+    candidate !== null &&
+    candidate.type === 'RArray'
+  );
+
+  return isRArray
+};
 
 prototypeAccessors$1.type.get = function () {
   return 'RArray'
-}
+};
 
 prototypeAccessors$1.length.get = function () {
-  var result = new RNumber(this.value.length)
+  var result = new RNumber(this.value.length);
 
   return result
-}
+};
 
 RArray.prototype.concat = function concat (rarray) {
-  if (rarray.type !== 'RArray') { throw new TypeError('Not a valid parameter for RArray #concat()') }
-  var result = (this.value).concat(rarray.value)
+  if (rarray.type !== 'RArray') {
+    throw new TypeError('Not a valid parameter for RArray #concat()')
+  }
 
-  return new (Function.prototype.bind.apply(RArray, [ null ].concat(result)))()
-}
+  return new (Function.prototype.bind.apply( RArray, [ null ].concat( this.value, rarray.value) ))
+};
 
-Object.defineProperties(RArray.prototype, prototypeAccessors$1)
+Object.defineProperties( RArray.prototype, prototypeAccessors$1 );
 
-exports.RNumber = RNumber
-exports.RArray = RArray
-// # sourceMappingURL=index.js.map
+var index = {
+  RNumber: RNumber,
+  RArray: RArray
+};
+
+module.exports = index;
+//# sourceMappingURL=index.js.map
